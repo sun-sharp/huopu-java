@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.FamilyDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wx.genealogy.system.entity.Family">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="logo" property="logo" />
+        <result column="name" property="name" />
+        <result column="people_number" property="peopleNumber" />
+        <result column="examine_number" property="examineNumber" />
+        <result column="audio" property="audio" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, logo, name,people_number,examine_number,audio
+    </sql>
+    <select id="selectPageList" resultType="com.wx.genealogy.system.entity.Family">
+        SELECT *,
+        ifnull((SELECT COUNT(*) FROM family_user where family_id = family.id), 0) AS userCount,
+        ifnull((SELECT COUNT(*) FROM family_genealogy where family_id = family.id), 0)          AS genealogyCount
+        FROM family
+        <where>
+            <if test="family.name != null and family.name != ''">
+                AND `name` LIKE CONCAT('%',#{family.name},'%')
+            </if>
+        </where>
+        order by userCount desc
+    </select>
+
+</mapper>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.SysRolePermissionDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wx.genealogy.system.entity.SysRolePermission">
+        <id column="id" property="id" />
+        <result column="role_id" property="roleId" />
+        <result column="permission_id" property="permissionId" />
+        <result column="create_by_id" property="createById" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, role_id, permission_id, create_by_id, create_time
+    </sql>
+
+    <select id="queryRolePermission" parameterType="java.lang.Integer" resultType="java.lang.Integer">
+        select permission_id from sys_role_permission where
+            role_id = #{roleId}
+    </select>
+</mapper>

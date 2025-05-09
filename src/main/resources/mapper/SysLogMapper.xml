@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.SysLogDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wx.genealogy.system.entity.SysLog">
+        <id column="id" property="id"/>
+        <result column="user_name" property="userName"/>
+        <result column="operation" property="operation"/>
+        <result column="method" property="method"/>
+        <result column="params" property="params"/>
+        <result column="ip" property="ip"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <sql id="where">
+        <where>
+            <if test="map.startTime != null and map.endTime != null">
+                AND create_time BETWEEN #{map.startTime} AND #{map.endTime}
+            </if>
+            <if test="map.startTime == null and map.endTime != null">
+                <![CDATA[
+         and create_time <= #{map.endTime}
+    ]]>
+            </if>
+            <if test="map.startTime != null and map.endTime == null">
+                <![CDATA[
+        and create_time >= #{map.startTime}
+    ]]>
+            </if>
+        </where>
+    </sql>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id
+        , user_name, operation, method, params, ip, create_time
+    </sql>
+    <select id="sysUserGetLog" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from sys_log
+        <include refid="where"/>
+    </select>
+
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.EssayDiscussDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wx.genealogy.system.entity.EssayDiscuss">
+        <id column="id" property="id" />
+        <result column="essay_id" property="essayId" />
+        <result column="user_id" property="userId" />
+        <result column="essay_discuss_id" property="essayDiscussId" />
+        <result column="level" property="level" />
+        <result column="content" property="content" />
+        <result column="create_time" property="createTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, essay_id, user_id, essay_discuss_id, level, content, create_time
+    </sql>
+
+</mapper>

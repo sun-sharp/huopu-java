@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.RiceRecordDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wx.genealogy.system.entity.RiceRecord">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="rice" property="rice" />
+        <result column="content" property="content" />
+        <result column="create_time" property="createTime" />
+        <association property="user" column="user_id" javaType="com.wx.genealogy.system.entity.User">
+            <result property="nickName"     column="nick_name"    />
+            <result property="realName"       column="real_name"       />
+        </association>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, rice, content, create_time
+    </sql>
+
+    <insert id="insertRiceRecordList"  parameterType="ArrayList">
+        INSERT INTO rice_record(user_id, rice, content, create_time)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.userId},#{item.rice},#{item.content},#{item.createTime})
+        </foreach>
+    </insert>
+
+    <!--查询多有米记录-->
+    <select id="selectRiceRecordList" resultMap="BaseResultMap">
+        select a.*,b.nick_name,b.real_name from rice_record a left join user b on a.user_id=b.id
+    </select>
+
+</mapper>

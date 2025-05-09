@@ -1,0 +1,77 @@
+server:
+  tomcat:
+    uri-encoding: utf-8
+  port: 8089
+
+spring:
+  profiles:
+    active: swagger
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+    serialization:
+      write-dates-as-timestamps: false
+    # deny: 192.168.1.218  175.27.189.242
+  datasource:
+    name: druidDataSource
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+#      url: jdbc:mysql://127.0.0.1:3306/genealogy?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&allowMultiQueries=TRUE
+      url: jdbc:mysql://175.27.189.242:3306/genealogy?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&allowMultiQueries=TRUE
+      username: genealogy
+      password: 545nHd6y4khXDXN6
+#      username: root
+#      password: root
+      filters: stat,wall,slf4j,config
+      max-active: 100
+      initial-size: 1
+      max-wait: 60000
+      min-idle: 1
+      time-between-eviction-runs-millis: 60000
+      min-evictable-idle-time-millis: 300000
+      validation-query: select 'x'
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: false
+      max-open-prepared-statements: 50
+      max-pool-prepared-statement-per-connection-size: 100
+  main:
+    allow-bean-definition-overriding: true
+  servlet:
+    multipart:
+      enabled: true
+      max-request-size: 215MB
+      max-file-size: 215MB
+      file-size-threshold: 2KB
+
+#mybatisPlus
+mybatis-plus:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  type-aliases-package: com.wx.genealogy.system.entity.*
+
+logging:
+  level:
+    root: info
+    com.wx.genealogy.system.mapper: info
+    com.wx.genealogy.common.util: debug
+
+jwt:
+  secret: secret1
+  expiration: 7200000
+  token: Authorization
+
+Security:
+  - APIKey: [ ]
+
+SecurityDefinitions:
+  APIKey:
+    type: apiKey
+    name: Authorization
+    in: header
+
+SysUser:
+  ResetPassword: xx123456
+knife4j:
+  enable: true

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.FamilyPedigreeDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="FamilyPedigree" type="com.wx.genealogy.system.entity.FamilyPedigree">
+        <result property="id"    column="id"    />
+        <result property="pid"    column="pid"    />
+        <result property="familyId"    column="family_id"    />
+        <result property="isDirect"    column="is_direct"    />
+        <result property="iteration"    column="iteration"    />
+        <result property="headimg"    column="headimg"    />
+        <result property="name"    column="name"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="education"    column="education"    />
+        <result property="blood"    column="blood"    />
+        <result property="phone"    column="phone"    />
+        <result property="isVisit"    column="is_visit"    />
+        <result property="userId"    column="user_id"    />
+        <result property="isUser"    column="is_user"    />
+        <result property="isAdmin"    column="is_admin"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="isSurvival"    column="is_survival"  />
+        <result property="initial"    column="initial"    />
+        <result property="spectrum"    column="spectrum"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="marriage"    column="marriage"    />
+        <result property="mateId"    column="mate_id"    />
+    </resultMap>
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="FamilyPedigreeRecursionVo" type="com.wx.genealogy.system.vo.req.FamilyPedigreeRecursionVo">
+        <result property="id"    column="id"    />
+        <result property="pid"    column="pid"    />
+        <result property="familyId"    column="family_id"    />
+        <result property="isDirect"    column="is_direct"    />
+        <result property="iteration"    column="iteration"    />
+        <result property="headimg"    column="headimg"    />
+        <result property="name"    column="name"    />
+        <result property="sex"    column="sex"    />
+        <result property="birthday"    column="birthday"    />
+        <result property="education"    column="education"    />
+        <result property="blood"    column="blood"    />
+        <result property="phone"    column="phone"    />
+        <result property="isVisit"    column="is_visit"    />
+        <result property="userId"    column="user_id"    />
+        <result property="isUser"    column="is_user"    />
+        <result property="isAdmin"    column="is_admin"    />
+        <result property="isDelete"    column="is_delete"    />
+        <result property="isSurvival"    column="is_survival"  />
+        <result property="initial"    column="initial"    />
+        <result property="spectrum"    column="spectrum"    />
+        <result property="remark"    column="remark"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="marriage"    column="marriage"    />
+        <result property="mateId"    column="mate_id"    />
+    </resultMap>
+
+    <sql id="selectFamilyPedigree">
+        select id, pid, family_id, is_direct, iteration, headimg,marriage,mate_id, name, sex, birthday, education, blood, phone, is_visit, user_id, is_user, is_admin, is_delete, initial, remark,is_survival ,spectrum,create_by, create_time, update_by, update_time from family_pedigree
+    </sql>
+
+    <select id="selectFamilyPedigreeList" parameterType="com.wx.genealogy.system.entity.FamilyPedigree" resultMap="FamilyPedigree" >
+        <include refid="selectFamilyPedigree"/>
+        <where>
+            <if test="pid != null "> and pid = #{pid}</if>
+            <if test="familyId != null "> and family_id = #{familyId}</if>
+            <if test="isDirect != null "> and is_direct = #{isDirect}</if>
+            <if test="iteration != null "> and iteration = #{iteration}</if>
+            <if test="headimg != null  and headimg != ''"> and headimg = #{headimg}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="birthday != null "> and birthday = #{birthday}</if>
+            <if test="education != null  and education != ''"> and education = #{education}</if>
+            <if test="blood != null  and blood != ''"> and blood = #{blood}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="isVisit != null "> and is_visit = #{isVisit}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="isSurvival != null">is_survival = #{isSurvival}</if>
+            <if test="spectrum != null and spectrum !=''">spectrum = #{spectrum}</if>
+            <if test="isUser != null "> and is_user = #{isUser}</if>
+            <if test="isAdmin != null "> and is_admin = #{isAdmin}</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+            <if test="initial != null  and initial != ''"> and initial = #{initial}</if>
+            <if test="mateId != null "> and mate_id = #{mateId},</if>
+            <if test="marriage != null "> and marriage = #{marriage}</if>
+        </where>
+        GROUP BY iteration
+    </select>
+
+
+    <select id="selectFamilyPedigreeRecursionVoList" parameterType="com.wx.genealogy.system.vo.req.FamilyPedigreeRecursionVo" resultMap="FamilyPedigreeRecursionVo" >
+        <include refid="selectFamilyPedigree"/>
+        <where>
+            <if test="pid != null "> and pid = #{pid}</if>
+            <if test="familyId != null "> and family_id = #{familyId}</if>
+            <if test="isDirect != null "> and is_direct = #{isDirect}</if>
+            <if test="iteration != null "> and iteration = #{iteration}</if>
+            <if test="headimg != null  and headimg != ''"> and headimg = #{headimg}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="sex != null "> and sex = #{sex}</if>
+            <if test="birthday != null "> and birthday = #{birthday}</if>
+            <if test="education != null  and education != ''"> and education = #{education}</if>
+            <if test="blood != null  and blood != ''"> and blood = #{blood}</if>
+            <if test="phone != null  and phone != ''"> and phone = #{phone}</if>
+            <if test="isVisit != null "> and is_visit = #{isVisit}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="isSurvival != null">is_survival = #{isSurvival}</if>
+            <if test="spectrum != null and spectrum !=''">spectrum = #{spectrum}</if>
+            <if test="isUser != null "> and is_user = #{isUser}</if>
+            <if test="isAdmin != null "> and is_admin = #{isAdmin}</if>
+            <if test="isDelete != null  and isDelete != ''"> and is_delete = #{isDelete}</if>
+            <if test="initial != null  and initial != ''"> and initial = #{initial}</if>
+            <if test="mateId != null "> and mate_id = #{mateId},</if>
+            <if test="marriage != null "> and marriage = #{marriage}</if>
+        </where>
+        GROUP BY iteration
+    </select>
+
+
+    <select id="selectFamilyPedigreeById" parameterType="Long" resultMap="FamilyPedigree">
+        <include refid="selectFamilyPedigree"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertFamilyPedigree" parameterType="com.wx.genealogy.system.entity.FamilyPedigree" useGeneratedKeys="true" keyProperty="id">
+        insert into family_pedigree
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="pid != null">pid,</if>
+            <if test="familyId != null">family_id,</if>
+            <if test="isDirect != null">is_direct,</if>
+            <if test="iteration != null">iteration,</if>
+            <if test="headimg != null">headimg,</if>
+            <if test="name != null">name,</if>
+            <if test="sex != null">sex,</if>
+            <if test="birthday != null">birthday,</if>
+            <if test="education != null">education,</if>
+            <if test="blood != null">blood,</if>
+            <if test="phone != null">phone,</if>
+            <if test="isVisit != null">is_visit,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="isUser != null">is_user,</if>
+            <if test="isAdmin != null">is_admin,</if>
+            <if test="isDelete != null">is_delete,</if>
+            <if test="initial != null">initial,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="isSurvival != null">is_survival</if>
+            <if test="spectrum != null">spectrum</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="mateId != null">mate_id,</if>
+            <if test="marriage != null">marriage,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="pid != null">#{pid},</if>
+            <if test="familyId != null">#{familyId},</if>
+            <if test="isDirect != null">#{isDirect},</if>
+            <if test="iteration != null">#{iteration},</if>
+            <if test="headimg != null">#{headimg},</if>
+            <if test="name != null">#{name},</if>
+            <if test="sex != null">#{sex},</if>
+            <if test="birthday != null">#{birthday},</if>
+            <if test="education != null">#{education},</if>
+            <if test="blood != null">#{blood},</if>
+            <if test="phone != null">#{phone},</if>
+            <if test="isVisit != null">#{isVisit},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="isUser != null">#{isUser},</if>
+            <if test="isAdmin != null">#{isAdmin},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+            <if test="initial != null">#{initial},</if>
+            <if test="isSurvival != null">#{isSurvival}</if>
+            <if test="spectrum != null">#{spectrum}</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="mateId != null">#{mateId},</if>
+            <if test="marriage != null">#{marriage},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFamilyPedigree" parameterType="com.wx.genealogy.system.entity.FamilyPedigree">
+        update family_pedigree
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="pid != null">pid = #{pid},</if>
+            <if test="familyId != null">family_id = #{familyId},</if>
+            <if test="isDirect != null">is_direct = #{isDirect},</if>
+            <if test="iteration != null">iteration = #{iteration},</if>
+            <if test="headimg != null">headimg = #{headimg},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="education != null">education = #{education},</if>
+            <if test="blood != null">blood = #{blood},</if>
+            <if test="phone != null">phone = #{phone},</if>
+            <if test="isVisit != null">is_visit = #{isVisit},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="isUser != null">is_user = #{isUser},</if>
+            <if test="isAdmin != null">is_admin = #{isAdmin},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+            <if test="initial != null">initial = #{initial},</if>
+            <if test="isSurvival != null">is_survival = #{isSurvival}</if>
+            <if test="spectrum != null">spectrum = #{spectrum}</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="mateId != null  "> and mate_id = #{mateId},</if>
+            <if test="marriage != null "> and marriage = #{marriage},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteFamilyPedigreeById" parameterType="Long">
+        delete from family_pedigree where id = #{id}
+    </delete>
+
+    <delete id="deleteFamilyPedigreeByIds" parameterType="String">
+        delete from family_pedigree where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--统计家族几代人-->
+    <select id="selectGenerationCountsById" parameterType="Long" resultType="java.util.Map">
+    SELECT iteration, COUNT(*) AS num
+    FROM family_pedigree
+    WHERE family_id = 1
+    GROUP BY iteration
+  </select>
+
+    <!-- 查询多少代和多少人-->
+    <!--<select id="selectGenerationCountsById" parameterType="Long" resultType="java.util.Map">-->
+        <!--SELECT COUNT(*) AS num, MAX(iteration) AS iteration FROM family_pedigree WHERE family_id = 1;-->
+    <!--</select>-->
+
+
+
+
+
+</mapper>

@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.FamilyGenealogyDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wx.genealogy.system.entity.FamilyGenealogy">
+        <id column="id" property="id" />
+        <result column="family_id" property="familyId" />
+        <result column="family_user_id" property="familyUserId" />
+        <result column="user_id" property="userId" />
+        <result column="relation" property="relation" />
+        <result column="identity" property="identity" />
+        <result column="generation" property="generation" />
+        <result column="genealogy_name" property="genealogyName" />
+        <result column="sex" property="sex" />
+        <result column="create_time" property="createTime" />
+        <result column="status" property="status" />
+        <result column="generation_num" property="generationNum" />
+        <result column="apply_name" property="applyName" />
+        <result column="parent_id" property="parentId" />
+        <result column="head_img" property="headImg" />
+        <result column="is_alive" property="isAlive" />
+        <result column="chart" property="chart" />
+        <result column="uid" property="uid" />
+        <result column="audio" property="audio" />
+    </resultMap>
+
+    <!--查询家谱图列表-->
+    <select id="selectFamilyGenealogyList" resultMap="BaseResultMap" parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+        SELECT count(id) as generation_num,id, family_id, family_user_id, user_id, relation,generation,is_alive,parent_id,chart,uid FROM family_genealogy
+        <where>
+            <if test="familyId != null "> and family_id = #{familyId}</if>
+            <if test="familyUserId != null"> and family_user_id = #{familyUserId}</if>
+            <if test="status != null"> and status = #{status}</if>
+            <if test="relation != null"> and relation = #{relation}</if>
+            <if test="generation != null"> and generation = #{generation}</if>
+            <if test="generation != null"> and generation = #{generation}</if>
+            <if test="audio != null"> and audio = #{audio}</if>
+        </where>
+        GROUP BY generation  ORDER BY generation DESC
+    </select>
+
+    <select id="selectFG" resultMap="BaseResultMap" parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+        SELECT * FROM family_genealogy
+        <where>
+            <if test="familyId != null "> and family_id = #{familyId}</if>
+            <if test="familyUserId != null"> and family_user_id = #{familyUserId}</if>
+            <if test="status != null"> and status = #{status}</if>
+            <if test="relation != null"> and relation = #{relation}</if>
+            <if test="generation != null"> and generation = #{generation}</if>
+            <if test="uid != null"> and uid = #{uid}</if>
+            <if test="audio != null"> and audio = #{audio}</if>
+
+        </where>
+    </select>
+
+    <select id="selectFGList" resultMap="BaseResultMap" parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+        SELECT * FROM family_genealogy
+        <where>
+            <if test="familyId != null "> and family_id = #{familyId}</if>
+            <if test="familyUserId != null"> and family_user_id = #{familyUserId}</if>
+            <if test="status != null"> and status = #{status}</if>
+            <if test="relation != null"> and relation = #{relation}</if>
+            <if test="generation != null"> and generation = #{generation}</if>
+            <if test="uid != null"> and uid = #{uid}</if>
+            <if test="audio != null"> and audio = #{audio}</if>
+        </where>
+    </select>
+
+    <select id="selectLt" resultMap="BaseResultMap" parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+        SELECT * FROM family_genealogy
+        <where>
+            <if test="familyId != null "> and family_id = #{familyId}</if>
+            <if test="familyUserId != null"> and user_id = #{userId}</if>
+        </where>
+    </select>
+
+    <!--公共查询-->
+    <select id="list" resultMap="BaseResultMap" parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+        SELECT * FROM family_genealogy
+        <where>
+            <if test="familyId != null "> and family_id = #{familyId}</if>
+            <if test="familyUserId != null"> and family_user_id = #{familyUserId}</if>
+            <if test="relation != null"> and relation = #{relation}</if>
+            <if test="generation != null"> and generation = #{generation}</if>
+            <if test="userId != null"> and user_id = #{userId}</if>
+            <if test="parentId != null"> and parent_id = #{parentId}</if>
+            <if test="applyName != null and applyName != '' "> and apply_name like concat('%',#{applyName},'%')</if>
+            <if test="genealogyName != null and genealogyName != '' "> and genealogy_name like concat('%',#{genealogyName},'%')</if>
+            <if test="audio != null"> and audio = #{audio}</if>
+        </where>
+    </select>
+
+    <select id="countPeopleByGeneration" resultType="java.util.Map">
+      SELECT generation,COUNT(*) AS num,
+           SUM(CASE WHEN is_alive = 1 THEN 1 ELSE 0 END) AS aliveCount,
+           SUM(CASE WHEN is_alive = 0 THEN 1 ELSE 0 END) AS deadCount
+      FROM family_genealogy
+      WHERE family_id = #{familyId}
+      GROUP BY generation
+      ORDER BY generation DESC;
+    </select>
+
+
+    <update id="updateChart"   parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+        update family_genealogy
+        <trim prefix="SET" suffixOverrides=",">
+            chart = #{chart}
+        </trim>
+         where id = #{id}
+    </update>
+
+
+    <update id="updatePid"   parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+        update family_genealogy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null ">parent_id = #{parentId},</if>
+            <if test="isAlive != null ">is_alive = #{isAlive},</if>
+            <if test="relation != null ">relation = #{relation},</if>
+            <if test="genealogyName != null ">genealogy_name = #{genealogyName},</if>
+            <if test="audio != null"> audio = #{audio},</if>
+
+        </trim>
+        where id = #{id}
+    </update>
+
+    <select id="selectUidMax" resultType="Integer" >
+      SELECT MAX(uid) AS maxUid FROM family_genealogy
+        <where>
+            <if test="familyId != null "> and family_id = #{familyId}</if>
+        </where>
+    </select>
+
+    <select id="selectNameGenerationList" resultType="Integer"   parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+        SELECT  COUNT(*)  AS num FROM family_genealogy
+        <where>
+            <if test="familyId != null "> AND family_id = #{familyId}</if>
+            <if test="generation != null "> AND generation = #{generation}</if>
+            <if test="genealogyName != null "> and genealogy_name = #{genealogyName}</if>
+        </where>
+    </select>
+
+
+    <select id="selectNameGenerationListOne"  resultMap="BaseResultMap" parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+            SELECT *
+                    FROM family_genealogy
+            GROUP BY family_id;
+
+    </select>
+
+    <update id="updatePidFamilyId"   parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+        update family_genealogy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="uid != null ">uid = #{uid},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+
+
+    <update id="updatePidIsNull"   parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+        UPDATE family_genealogy
+        SET parent_id = null
+        WHERE parent_id = #{uid}
+    </update>
+
+    <update id="updateUserIdIsNull"   parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+        UPDATE family_genealogy
+        SET user_id = null ,  status = 0 ,  head_img = null
+        WHERE id = #{id}
+    </update>
+
+    <update id="upFamilyGenealogyPid"   parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+        UPDATE family_genealogy
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null and parentId != -1">parent_id = #{parentId},</if>
+            <if test="parentId != null and parentId == -1">parent_id = null,</if>
+            <if test="isAlive != null">is_alive = #{isAlive},</if>
+            <if test="relation != null">relation = #{relation},</if>
+            <if test="sex != null">sex = #{sex},</if>
+            <if test="familyId != null">family_id = #{familyId},</if>
+            <if test="generation != null">generation = #{generation},</if>
+            <if test="genealogyName != null">genealogy_name = #{genealogyName},</if>
+            <if test="ranking != null">ranking = #{ranking},</if>
+            <if test="spouse != null">spouse = #{spouse},</if>
+            <if test="birthday != null">birthday = #{birthday},</if>
+            <if test="mourningDay != null">mourning_day = #{mourningDay},</if>
+        </trim>
+        WHERE id = #{id}
+    </update>
+
+
+
+
+
+
+
+
+</mapper>

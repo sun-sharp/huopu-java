@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.SysUserDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wx.genealogy.system.entity.SysUser">
+        <id column="id" property="id" />
+        <result column="user_name" property="userName" />
+        <result column="password" property="password" />
+        <result column="head_img_url" property="headImgUrl" />
+        <result column="nick_name" property="nickName" />
+        <result column="created_by_id" property="createdById" />
+        <result column="create_time" property="createTime" />
+        <result column="update_by_id" property="updateById" />
+        <result column="update_time" property="updateTime" />
+        <result column="status" property="status" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_name, password, head_img_url, nick_name, created_by_id, create_time, update_by_id, update_time, status, del_flag
+    </sql>
+    <sql id="where">
+        <where>
+            <if test="1 == 1">
+                and del_flag = 1
+            </if>
+            <if test="sysUserQueryListReqVo.userName != null and !sysUserQueryListReqVo.userName.equals('')">
+                and user_name = #{sysUserQueryListReqVo.userName}
+            </if>
+            <if test="sysUserQueryListReqVo.status != null">
+                and status = #{sysUserQueryListReqVo.status}
+            </if>
+            <if test="sysUserQueryListReqVo.roleId != null">
+                and id in (select user_id from sys_role_user  where role_id = #{sysUserQueryListReqVo.roleId})
+            </if>
+        </where>
+    </sql>
+
+    <select id="queryList" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List" />
+        from sys_user
+        <include refid="where" />
+        order by create_time desc
+    </select>
+    <select id="selectByStatus" resultType="com.wx.genealogy.system.entity.SysUser">
+        select id, nick_name
+        from sys_user where status = #{status}
+                        and del_flag = #{delFlag}
+    </select>
+    <select id="selectByPrimaryKey1" resultType="com.wx.genealogy.system.entity.SysUser">
+        select id, nick_name
+        from sys_user
+        where id = #{userId}
+    </select>
+</mapper>

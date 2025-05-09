@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.FamilyUserDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wx.genealogy.system.entity.FamilyUser">
+        <id column="id" property="id" />
+        <result column="family_id" property="familyId" />
+        <result column="user_id" property="userId" />
+        <result column="level" property="level" />
+        <result column="generation" property="generation" />
+        <result column="genealogy_name" property="genealogyName" />
+        <result column="relation" property="relation" />
+        <result column="sex" property="sex" />
+        <result column="status" property="status" />
+        <result column="introduce" property="introduce" />
+        <result column="remarks" property="remarks" />
+        <result column="create_time" property="createTime" />
+        <result column="message_number" property="messageNumber" />
+        <result column="manage_time" property="manageTime" />
+        <result column="joins" property="joins" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, family_id, user_id, level,generation, genealogy_name, relation, sex, status, introduce, remarks, create_time, message_number, manage_time,joins
+    </sql>
+
+    <update id="setInc" parameterType="com.wx.genealogy.system.entity.FamilyUser" >
+        update family_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="messageNumber != null and messageNumber!=''">
+                message_number = message_number + #{messageNumber},
+            </if>
+        </trim>
+        <where>
+            <if test="familyId != null and familyId!=''">
+                family_id = #{familyId}
+            </if>
+        </where>
+    </update>
+
+    <update id="updateFamilyUser" parameterType="com.wx.genealogy.system.entity.FamilyUser" >
+        update family_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="status != null"> status = #{status}</if>
+        </trim>
+        <where>
+            user_id = #{userId}
+        </where>
+    </update>
+
+
+    <!--<update id="updateById" parameterType="com.wx.genealogy.system.entity.FamilyUser" >-->
+        <!--update family_user-->
+        <!--<trim prefix="set" suffixOverrides=",">-->
+            <!--<if test="status != null"> status = #{status}</if>-->
+        <!--</trim>-->
+        <!--<where>-->
+            <!--id = #{id}-->
+        <!--</where>-->
+    <!--</update>-->
+
+
+
+
+    <select id="selectManagerByFamilyIdNo" parameterType="java.lang.Integer" resultType="com.wx.genealogy.system.entity.FamilyUser">
+        <![CDATA[
+        SELECT *
+        FROM family_user a
+        LEFT JOIN family_genealogy_receive b ON a.user_id = b.user_id
+        LEFT JOIN user c ON a.user_id = c.id
+        WHERE a.family_id = #{familyId}
+        AND a.level <> 1 AND  a.level <> 2
+        ORDER BY create_time DESC
+      ]]>
+    </select>
+
+    <select id="selectStatusByFamilyId" parameterType="java.lang.Integer" resultType="com.wx.genealogy.system.entity.FamilyUser">
+        <![CDATA[
+        SELECT *
+        FROM family_user
+        WHERE family_id = #{familyId}
+        ORDER BY create_time DESC
+      ]]>
+    </select>
+
+
+    <update id="updateJoins"   parameterType="com.wx.genealogy.system.entity.FamilyGenealogy">
+        UPDATE family_user
+        SET joins = 0
+        WHERE id = #{id}
+    </update>
+
+</mapper>

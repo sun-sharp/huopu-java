@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.FamilyGenealogyReceiveDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wx.genealogy.system.entity.FamilyGenealogyReceive">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="user_img" property="userImg" />
+        <result column="user_name" property="userName" />
+        <result column="status" property="status" />
+        <result column="apply_remark" property="applyRemark" />
+        <result column="refuse" property="refuse" />
+        <result column="create_time" property="createTime" />
+        <result column="update_time" property="updateTime" />
+        <result column="relation" property="relation" />
+    </resultMap>
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="FamilyGenealogy" type="com.wx.genealogy.system.entity.FamilyGenealogy">
+        <id column="id" property="id" />
+        <result column="family_id" property="familyId" />
+        <result column="family_user_id" property="familyUserId" />
+        <result column="user_id" property="userId" />
+        <result column="relation" property="relation" />
+        <result column="identity" property="identity" />
+        <result column="generation" property="generation" />
+        <result column="genealogy_name" property="genealogyName" />
+        <result column="sex" property="sex" />
+        <result column="create_time" property="createTime" />
+        <result column="status" property="status" />
+        <result column="apply_remark" property="applyRemark" />
+        <result column="refuse" property="refuse" />
+        <result column="generation_num" property="generationNum" />
+        <result column="apply_name" property="applyName" />
+        <result column="parent_id" property="parentId" />
+        <result column="head_img" property="headImg" />
+        <result column="is_alive" property="isAlive" />
+
+        <association property="familyGenealogyReceive" javaType="com.wx.genealogy.system.entity.FamilyGenealogyReceive"> <!--property：当前实体中的pojo属性  javaType：当前实体中的pojo属性的类型，此处已定义别名-->
+            <!--映射card属性-->
+            <id column="receive_id" property="id"></id>
+            <result column="user_name" property="userName"></result>
+            <result column="user_img" property="userImg"></result>
+            <result column="status" property="status"></result>
+            <result column="refuse" property="refuse"></result>
+            <result column="update_time" property="updateTime"></result>
+        </association>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, family_genealogy, user_id, user_img, user_name, relation, generation, status, apply_remark, refuse, create_time, update_time
+    </sql>
+
+
+    <!--查询需要审核的认领申请-->
+    <select id="selectAuditApply" resultMap="FamilyGenealogy" parameterType="com.wx.genealogy.system.entity.FamilyGenealogyReceive">
+        SELECT
+        a.id,
+        a.head_img,
+        a.generation,
+        a.relation,
+        a.apply_name,
+        b.id
+        AS receive_id, b.user_name,
+        b.user_img,
+        b.STATUS,
+        b.refuse,
+        b.update_time
+        FROM
+        family_genealogy a
+        LEFT JOIN family_genealogy_receive b ON a.id = b.family_genealogy_id
+        <where>
+            <if test="familyId != null">and b.family_id=#{familyId}</if>
+            <if test="status != null">and b.status=#{status}</if>
+            <if test="userId != null">and b.user_id=#{userId}</if>
+        </where>
+        ORDER BY
+        b.create_time DESC
+    </select>
+
+
+    <!--查询认领申请-->
+    <select id="selectApply" resultMap="FamilyGenealogy" parameterType="com.wx.genealogy.system.entity.FamilyGenealogyReceive">
+      SELECT
+    a.id,
+    a.head_img,
+    a.generation,
+    a.relation,
+    a.apply_name,
+    b.id AS receive_id,
+    b.user_name,
+    b.user_img,
+    b.STATUS,
+    b.refuse,
+    b.create_time,
+    b.update_time,
+    b.relation,
+    b.apply_remark
+    FROM
+    family_genealogy a
+    LEFT JOIN family_genealogy_receive b ON a.id = b.family_genealogy_id
+    WHERE b.family_id = #{familyId} and b.status= 0
+    ORDER BY b.create_time DESC
+    </select>
+
+
+
+
+</mapper>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.FamilyMessageDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wx.genealogy.system.entity.FamilyMessage">
+        <id column="id" property="id" />
+        <result column="user_id" property="userId" />
+        <result column="family_id" property="familyId" />
+        <result column="essay_message" property="essayMessage" />
+        <result column="familyuser_message" property="familyuserMessage" />
+        <result column="familyshen_message" property="familyshenMessage" />
+        <result column="familyshen_message2" property="familyshenMessage2" />
+        <result column="familyshen_message3" property="familyshenMessage3" />
+        <result column="familymanage_message" property="familymanageMessage" />
+        <result column="familylog_message" property="familylogMessage" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, user_id, family_id, essay_message, familyuser_message, familyshen_message, familyshen_message2, familyshen_message3, familymanage_message, familylog_message
+    </sql>
+
+
+    <!-- 更新操作 -->
+    <update id="updateFamilyMessage" parameterType="com.wx.genealogy.system.entity.FamilyMessage">
+        update family_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="essayMessage != null">essay_message = essay_message + #{essayMessage},</if>
+            <if test="familyuserMessage != null">familyuser_message = familyuser_message + #{familyuserMessage},</if>
+            <if test="familyshenMessage != null">familyshen_message = familyshen_message + #{familyshenMessage},</if>
+            <if test="familyshenMessage2 != null">familyshen_message2 = familyshen_message2 + #{familyshenMessage2},</if>
+            <if test="familyshenMessage3 != null">familyshen_message3 = familyshen_message3 + #{familyshenMessage3},</if>
+            <if test="familymanageMessage != null">familymanage_message = familymanage_message + #{familymanageMessage} ,</if>
+            <if test="familylogMessage != null">familylog_message = familylog_message + 1,</if>
+        </trim>
+        <where>
+            <if test="userId != null">and user_id =  #{userId}</if>
+            <if test="familyId != null">and family_id =  #{familyId}</if>
+        </where>
+    </update>
+
+    <!-- 更新操作 -->
+    <update id="updateFamilyMessageEmpty2" parameterType="com.wx.genealogy.system.entity.FamilyMessage">
+        update family_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="essayMessage != null">essay_message = #{essayMessage},</if>
+            <if test="familyuserMessage != null">familyuser_message =  #{familyuserMessage},</if>
+            <if test="familyshenMessage != null">familyshen_message =  #{familyshenMessage},</if>
+            <if test="familyshenMessage2 != null">familyshen_message2 = + #{familyshenMessage2},</if>
+            <if test="familyshenMessage3 != null">familyshen_message3 = #{familyshenMessage3},</if>
+            <if test="familymanageMessage != null">familymanage_message = #{familymanageMessage} ,</if>
+            <if test="familylogMessage != null">familylog_message =#{familylog_message},</if>
+        </trim>
+        <where>
+            <if test="userId != null">and user_id =  #{userId}</if>
+            <if test="familyId != null">and family_id =  #{familyId}</if>
+        </where>
+    </update>
+
+
+
+    <update id="updateFamilyMessageEmpty" parameterType="com.wx.genealogy.system.entity.FamilyMessage">
+        update family_message
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="essayMessage != null">essay_message =  #{essayMessage},</if>
+            <if test="familyuserMessage != null">familyuser_message = #{familyuserMessage},</if>
+            <if test="familyshenMessage != null">familyshen_message =   #{familyshenMessage},</if>
+            <if test="familyshenMessage2 != null">familyshen_message2 = #{familyshenMessage2},</if>
+            <if test="familyshenMessage3 != null">familyshen_message3 = #{familyshenMessage3},</if>
+            <if test="familymanageMessage != null">familymanage_message =  #{familymanageMessage} ,</if>
+            <if test="familylogMessage != null">familylog_message = #{familylogMessage}</if>
+        </trim>
+        <where>
+            <if test="id != null">and id =  #{id}</if>
+        </where>
+
+    </update>
+
+
+</mapper>

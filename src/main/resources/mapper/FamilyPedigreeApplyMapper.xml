@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.FamilyPedigreeApplyDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="FamilyPedigreeApplyResult" type="com.wx.genealogy.system.entity.FamilyPedigreeApply">
+        <result property="applyId"    column="apply_id"    />
+        <result property="familyId"    column="family_id"    />
+        <result property="relation"    column="relation"    />
+        <result property="text"    column="text"    />
+        <result property="userId"    column="user_id"    />
+        <result property="name"    column="name"    />
+        <result property="time"    column="time"    />
+        <result property="type"    column="type"    />
+        <result property="disposeTime"    column="dispose_time"    />
+        <result property="receipt"    column="receipt"    />
+        <result property="processingUser"    column="processing_user"    />
+        <result property="processingName"    column="processing_name"    />
+    </resultMap>
+
+    <sql id="selectFamilyPedigreeApplyVo">
+        select apply_id, family_id, relation, text, user_id, name, time, type, dispose_time, receipt, processing_user, processing_name from family_pedigree_apply
+    </sql>
+
+    <select id="selectFamilyPedigreeApplyList" parameterType="com.wx.genealogy.system.entity.FamilyPedigreeApply" resultMap="FamilyPedigreeApplyResult">
+        <include refid="selectFamilyPedigreeApplyVo"/>
+        <where>
+            <if test="familyId != null "> and family_id = #{familyId}</if>
+            <if test="relation != null  and relation != ''"> and relation = #{relation}</if>
+            <if test="text != null  and text != ''"> and text = #{text}</if>
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="time != null "> and time = #{time}</if>
+            <if test="type != null "> and type = #{type}</if>
+            <if test="disposeTime != null "> and dispose_time = #{disposeTime}</if>
+            <if test="receipt != null  and receipt != ''"> and receipt = #{receipt}</if>
+            <if test="processingUser != null  and processingUser != ''"> and processing_user = #{processingUser}</if>
+            <if test="processingName != null  and processingName != ''"> and processing_name like concat('%', #{processingName}, '%')</if>
+        </where>
+        ORDER BY time DESC;
+    </select>
+
+    <select id="selectFamilyPedigreeApplyByApplyId" parameterType="Long" resultMap="FamilyPedigreeApplyResult">
+        <include refid="selectFamilyPedigreeApplyVo"/>
+        where apply_id = #{applyId}
+    </select>
+
+    <insert id="insertFamilyPedigreeApply" parameterType="com.wx.genealogy.system.entity.FamilyPedigreeApply" useGeneratedKeys="true" keyProperty="applyId">
+        insert into family_pedigree_apply
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="familyId != null">family_id,</if>
+            <if test="relation != null">relation,</if>
+            <if test="text != null">text,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="name != null">name,</if>
+            <if test="time != null">time,</if>
+            <if test="type != null">type,</if>
+            <if test="disposeTime != null">dispose_time,</if>
+            <if test="receipt != null">receipt,</if>
+            <if test="processingUser != null">processing_user,</if>
+            <if test="processingName != null">processing_name,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="familyId != null">#{familyId},</if>
+            <if test="relation != null">#{relation},</if>
+            <if test="text != null">#{text},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="time != null">#{time},</if>
+            <if test="type != null">#{type},</if>
+            <if test="disposeTime != null">#{disposeTime},</if>
+            <if test="receipt != null">#{receipt},</if>
+            <if test="processingUser != null">#{processingUser},</if>
+            <if test="processingName != null">#{processingName},</if>
+        </trim>
+    </insert>
+
+    <update id="updateFamilyPedigreeApply" parameterType="com.wx.genealogy.system.entity.FamilyPedigreeApply">
+        update family_pedigree_apply
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="familyId != null">family_id = #{familyId},</if>
+            <if test="relation != null">relation = #{relation},</if>
+            <if test="text != null">text = #{text},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="time != null">time = #{time},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="disposeTime != null">dispose_time = #{disposeTime},</if>
+            <if test="receipt != null">receipt = #{receipt},</if>
+            <if test="processingUser != null">processing_user = #{processingUser},</if>
+            <if test="processingName != null">processing_name = #{processingName},</if>
+        </trim>
+        where apply_id = #{applyId}
+    </update>
+
+    <delete id="deleteFamilyPedigreeApplyByApplyId" parameterType="Long">
+        delete from family_pedigree_apply where apply_id = #{applyId}
+    </delete>
+
+    <delete id="deleteFamilyPedigreeApplyByApplyIds" parameterType="String">
+        delete from family_pedigree_apply where apply_id in
+        <foreach item="applyId" collection="array" open="(" separator="," close=")">
+            #{applyId}
+        </foreach>
+    </delete>
+
+
+
+</mapper>

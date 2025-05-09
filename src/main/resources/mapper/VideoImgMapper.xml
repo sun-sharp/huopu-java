@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.VideoImgDao">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.wx.genealogy.system.entity.VideoImg">
+        <id column="id" property="id" />
+        <result column="video_id" property="videoId" />
+        <result column="img" property="img" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, video_id, img
+    </sql>
+
+    <insert id="insertVideoImgList"  parameterType="ArrayList">
+        INSERT INTO video_img(video_id,img)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.videoId},#{item.img})
+        </foreach>
+    </insert>
+
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wx.genealogy.system.mapper.TaskDao">
+
+    <resultMap id="BaseResultMap" type="com.wx.genealogy.system.entity.Task">
+        <!--@Table task-->
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="titile" column="titile" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="description" column="description"/>
+        <result property="imgUrls" column="img_urls" jdbcType="VARCHAR"/>
+        <result property="rewardMi" column="reward_mi" jdbcType="INTEGER"/>
+        <result property="rewardDou" column="reward_dou" jdbcType="INTEGER"/>
+        <result property="userId" column="user_id" jdbcType="INTEGER"/>
+        <result property="getNumber" column="get_number" jdbcType="INTEGER"/>
+        <result property="status" column="status" jdbcType="INTEGER"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="deadlineTime" column="deadline_time" jdbcType="TIMESTAMP"/>
+        <association property="user" column="user_id" javaType="com.wx.genealogy.system.entity.User">
+            <result property="nickName"     column="nick_name"    />
+            <result property="realName"       column="real_name"       />
+        </association>
+    </resultMap>
+
+    <!--查询所有任务-->
+    <select id="queryAllTask" resultMap="BaseResultMap">
+        select a.*,b.nick_name,b.real_name from task a left join user b on a.user_id=b.id ${ew.customSqlSegment} order by a.create_time desc
+    </select>
+
+</mapper>
+
