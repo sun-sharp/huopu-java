@@ -110,7 +110,7 @@ public class FileController {
     public String uploadAudio(@RequestParam("file") MultipartFile file) throws IOException {
         String address = ImgUtil.saveAudio(file, audioPath);
         return "https://www.ohopu.com/api"+ address;
-       // return "http://127.0.0.1:8089"+address;
+//        return "http://127.0.0.1:8089"+address;
     }
 
     private String generateUniqueFileName() {
