@@ -60,6 +60,9 @@ public class FamilyGenealogyController {
     @Resource
     private FamilyService familyService;
 
+    @Resource
+    private UserService userService;
+
     @Autowired
     private FamilyGenealogyImgService familyGenealogyImgService;
 
@@ -135,7 +138,6 @@ public class FamilyGenealogyController {
         //familyGenealogySelect.setFamilyUserId(familyUserId);
         return familyGenealogyService.selectFamilyGenealogy(familyGenealogySelect);
     }
-
 
 
     @ApiOperation(value = "根据家族id和代数查询当代家谱图中的直系")
@@ -372,6 +374,15 @@ public class FamilyGenealogyController {
             if (CollectionUtils.isNotEmpty(applyListPu)) {
                 familyGenealogy.setApplyPu(applyListPu.get(0));
             }
+
+            /* 查询头像 */
+            Integer userId = familyGenealogy.getUserId();
+            if (userId != null) {
+                User user = this.userService.getById(userId);
+                if (null != user) {
+                    familyGenealogy.setHeadImg(user.getAvatar());
+                }
+            }
         }
         return ResponseUtil.ok("查询成功", familyGenealogy);
     }
@@ -436,7 +447,7 @@ public class FamilyGenealogyController {
     }
 
     @PutMapping("/upFamilyGenealogyPid")
-    @ApiOperation(value = "根据id修改parentId、代数、家谱名、是否在世、家族关系、性别、familyId、音频、配偶、排行、生日、忌日")
+    @ApiOperation(value = "根据id修改parentId、代数、家谱名、是否在世、家族关系、性别、familyId、音频、配偶、排行、生日、忌日、头像")
     @ApiImplicitParams(value = {
             @ApiImplicitParam(name = "id", value = "当前id", dataType = "java.lang.Integer", paramType = "body", required = true),
             @ApiImplicitParam(name = "generation", value = "代数", dataType = "java.lang.Integer", paramType = "body", required = true),
@@ -447,6 +458,7 @@ public class FamilyGenealogyController {
             @ApiImplicitParam(name = "sex", value = "性别1男2女", dataType = "java.lang.Integer", paramType = "body", required = true),
             @ApiImplicitParam(name = "familyId", value = "家族id", dataType = "java.lang.Integer", paramType = "body", required = true),
             @ApiImplicitParam(name = "audio", value = "音频", dataType = "java.lang.String", paramType = "body", required = true),
+            @ApiImplicitParam(name = "headImg", value = "头像", dataType = "java.lang.String", paramType = "body", required = true),
             @ApiImplicitParam(name = "spouse", value = "配偶", dataType = "java.lang.String", paramType = "body", required = false),
             @ApiImplicitParam(name = "ranking", value = "排行", dataType = "java.lang.Integer", paramType = "body", required = false),
             @ApiImplicitParam(name = "birthday", value = "生日", dataType = "java.lang.String", paramType = "body", required = false),
@@ -588,9 +600,9 @@ public class FamilyGenealogyController {
     /**
      * 查询同代异性列表
      *
-     * @param familyId 家族ID
+     * @param familyId   家族ID
      * @param generation 代
-     * @param sex 性别
+     * @param sex        性别
      * @return
      */
     @GetMapping("/getSpouseList")
@@ -653,6 +665,7 @@ public class FamilyGenealogyController {
 
     /**
      * 消息加减  type +-
+     *
      * @param id
      * @param userId
      * @param type
@@ -682,6 +695,7 @@ public class FamilyGenealogyController {
 
     /**
      * 消息加减  type +-
+     *
      * @param id
      * @param userId
      * @param type
