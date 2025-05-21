@@ -48,12 +48,11 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         User userData = userDao.selectOne(userFind);
 
 
-
         //未注册过
-        if(userData==null){
-            return ResponseUtil.ok("未注册",user);
+        if (userData == null) {
+            return ResponseUtil.ok("未注册", user);
         }
-        if(userData.getFamily_index() == 0) {
+        if (userData.getFamily_index() == 0) {
 
             QueryWrapper<FamilyUser> familyUserQuery = new QueryWrapper<>();
             familyUserQuery.select("family_id")
@@ -62,11 +61,10 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
                     .last("limit 1");
 
             FamilyUser familyUser = familyUserDao.selectOne(familyUserQuery);
-            if(familyUser != null) {
+            if (familyUser != null) {
                 userData.setFamily_index(familyUser.getFamilyId());
             }
         }
-
 
 
         //登录成功后还需要更新下登录时间
@@ -77,15 +75,15 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         //最新登录时间传回前端
         userData.setLastLoginTime(userUpdate.getLastLoginTime());
 
-        return ResponseUtil.ok("获取成功",userData);
+        return ResponseUtil.ok("获取成功", userData);
     }
 
-    public JsonResult updateFamilyIndex(User user) throws Exception{
+    public JsonResult updateFamilyIndex(User user) throws Exception {
         //修改之前检查真实姓名是否存在，如果存在则提示
         QueryWrapper<User> userFind = new QueryWrapper<User>();
 
-        int result= userDao.updateById(user);
-        return result==0?ResponseUtil.fail("修改失败"):ResponseUtil.ok("修改成功");
+        int result = userDao.updateById(user);
+        return result == 0 ? ResponseUtil.fail("修改失败") : ResponseUtil.ok("修改成功");
     }
 
     @Override
@@ -95,31 +93,30 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         userFind.eq("openid", user.getOpenid());
         User userData = userDao.selectOne(userFind);
         //已经注册过
-        if(userData!=null){
-            return ResponseUtil.ok("已经注册",userData);
+        if (userData != null) {
+            return ResponseUtil.ok("已经注册", userData);
         }
         //未注册过进行注册
-        int result=userDao.insert(user);
-        return result==0?ResponseUtil.fail("注册失败"):ResponseUtil.ok("注册成功",user);
+        int result = userDao.insert(user);
+        return result == 0 ? ResponseUtil.fail("注册失败") : ResponseUtil.ok("注册成功", user);
     }
 
 
     @Override
-    public JsonResult updateUserById(User user) throws Exception{
+    public JsonResult updateUserById(User user) throws Exception {
         //修改之前检查真实姓名是否存在，如果存在则提示
         QueryWrapper<User> userFind = new QueryWrapper<User>();
         userFind.eq("real_name", user.getRealName());
         userFind.ne("id", user.getId());
         User userData = userDao.selectOne(userFind);
         //已经注册过
-        if(userData!=null){
+        if (userData != null) {
             return ResponseUtil.fail("真实姓名已存在");
         }
 
 
-
-        int result= userDao.updateById(user);
-        return result==0?ResponseUtil.fail("修改失败"):ResponseUtil.ok("修改成功");
+        int result = userDao.updateById(user);
+        return result == 0 ? ResponseUtil.fail("修改失败") : ResponseUtil.ok("修改成功");
     }
 
     @Override
@@ -127,7 +124,21 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
         User userData = userDao.selectById(id);
         Integer amount = douDeliverDao.getAmountByUserId(id);
         userData.setDou(null != amount ? amount : 0);
-        return  ResponseUtil.ok("获取成功",userData);
+        /* 设置family_index */
+        if (userData.getFamily_index() == 0) {
+
+            QueryWrapper<FamilyUser> familyUserQuery = new QueryWrapper<>();
+            familyUserQuery.select("family_id")
+                    .eq("user_id", userData.getId())
+                    .gt("family_id", 0)
+                    .last("limit 1");
+
+            FamilyUser familyUser = familyUserDao.selectOne(familyUserQuery);
+            if (familyUser != null) {
+                userData.setFamily_index(familyUser.getFamilyId());
+            }
+        }
+        return ResponseUtil.ok("获取成功", userData);
     }
 
     @Override
@@ -159,6 +170,7 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
 
     /**
      * 查询用户根据id
+     *
      * @param userId
      * @return
      */
