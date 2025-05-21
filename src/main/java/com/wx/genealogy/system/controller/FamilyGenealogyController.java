@@ -436,9 +436,21 @@ public class FamilyGenealogyController {
     }
 
     @PutMapping("/upFamilyGenealogyPid")
-    @ApiOperation(value = "根据id修改parentId")
-    @ApiImplicitParams(value = {@ApiImplicitParam(name = "id", value = "当前id", dataType = "java.lang.Integer", paramType = "body", required = true), @ApiImplicitParam(name = "generation", value = "代数", dataType = "java.lang.Integer", paramType = "body", required = true), @ApiImplicitParam(name = "genealogyName", value = "家谱名", dataType = "java.lang.String", paramType = "body", required = true), @ApiImplicitParam(name = "parentId", value = "父级id", dataType = "java.lang.Integer", paramType = "body", required = true), @ApiImplicitParam(name = "isAlive", value = "是否在世,0否1是", dataType = "java.lang.Integer", paramType = "body", required = true), @ApiImplicitParam(name = "relation", value = "和家族关系1直亲2婚姻3表亲", dataType = "java.lang.Integer", paramType = "body", required = true), @ApiImplicitParam(name = "sex", value = "性别1男2女", dataType = "java.lang.Integer", paramType = "body", required = true), @ApiImplicitParam(name = "familyId", value = "家族id", dataType = "java.lang.Integer", paramType = "body", required = true), @ApiImplicitParam(name = "audio", value = "音频", dataType = "java.lang.String", paramType = "body", required = true), @ApiImplicitParam(name = "spouse", value = "配偶", dataType = "java.lang.String", paramType = "body", required = false), @ApiImplicitParam(name = "ranking", value = "排行", dataType = "java.lang.Integer", paramType = "body", required = false), @ApiImplicitParam(name = "birthday", value = "生日", dataType = "java.lang.String", paramType = "body", required = false), @ApiImplicitParam(name = "mourningDay", value = "忌日", dataType = "java.lang.String", paramType = "body", required = false),
-
+    @ApiOperation(value = "根据id修改parentId、代数、家谱名、是否在世、家族关系、性别、familyId、音频、配偶、排行、生日、忌日")
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name = "id", value = "当前id", dataType = "java.lang.Integer", paramType = "body", required = true),
+            @ApiImplicitParam(name = "generation", value = "代数", dataType = "java.lang.Integer", paramType = "body", required = true),
+            @ApiImplicitParam(name = "genealogyName", value = "家谱名", dataType = "java.lang.String", paramType = "body", required = true),
+            @ApiImplicitParam(name = "parentId", value = "父级id", dataType = "java.lang.Integer", paramType = "body", required = true),
+            @ApiImplicitParam(name = "isAlive", value = "是否在世,0否1是", dataType = "java.lang.Integer", paramType = "body", required = true),
+            @ApiImplicitParam(name = "relation", value = "和家族关系1直亲2婚姻3表亲", dataType = "java.lang.Integer", paramType = "body", required = true),
+            @ApiImplicitParam(name = "sex", value = "性别1男2女", dataType = "java.lang.Integer", paramType = "body", required = true),
+            @ApiImplicitParam(name = "familyId", value = "家族id", dataType = "java.lang.Integer", paramType = "body", required = true),
+            @ApiImplicitParam(name = "audio", value = "音频", dataType = "java.lang.String", paramType = "body", required = true),
+            @ApiImplicitParam(name = "spouse", value = "配偶", dataType = "java.lang.String", paramType = "body", required = false),
+            @ApiImplicitParam(name = "ranking", value = "排行", dataType = "java.lang.Integer", paramType = "body", required = false),
+            @ApiImplicitParam(name = "birthday", value = "生日", dataType = "java.lang.String", paramType = "body", required = false),
+            @ApiImplicitParam(name = "mourningDay", value = "忌日", dataType = "java.lang.String", paramType = "body", required = false),
     })
     public JsonResult upFamilyGenealogyPid(@RequestBody @ApiIgnore FamilyGenealogy familyGenealogy) {
         System.out.println(familyGenealogy);

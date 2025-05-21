@@ -185,6 +185,7 @@
             <if test="spouse != null">spouse = #{spouse},</if>
             <if test="birthday != null">birthday = #{birthday},</if>
             <if test="mourningDay != null">mourning_day = #{mourningDay},</if>
+            <if test="audio != null"> audio = #{audio},</if>
         </trim>
         WHERE id = #{id}
     </update>
