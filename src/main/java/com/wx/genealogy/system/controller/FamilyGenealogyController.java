@@ -686,7 +686,7 @@ public class FamilyGenealogyController {
         } else {
             FamilyMessage familyMessage = new FamilyMessage();
             familyMessage.setId(familydata.getId());
-            familyMessage.setEditapplyMessage(familydata.getEditapplyMessage() > 0 ? familydata.getEditapplyMessage() + type : 0);
+            familyMessage.setEditapplyMessage(familydata.getEditapplyMessage() > 0 ? (familydata.getEditapplyMessage() + type) : type);
             familyMessage.setFamilyId(familyGenealogy.getFamilyId());
             familyMessage.setUserId(userId);
             familyMessageService.updateById(familyMessage);
