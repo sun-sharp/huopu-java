@@ -109,9 +109,9 @@ public class FileController {
     @RequestMapping(value = "/uploadAudio", method = RequestMethod.POST, headers = "content-type=multipart/form-data")
     public String uploadAudio(@RequestParam("file") MultipartFile file) throws IOException {
         String address = ImgUtil.saveAudio(file, audioPath);
-//        return "https://www.ohopu.com/api"+ address;
+        return "https://www.ohopu.com/api"+ address;
 //        return "http://127.0.0.1:8089"+address;
-        return "http://192.168.0.102:8089"+address;
+//        return "http://192.168.0.102:8089"+address;
     }
 
     private String generateUniqueFileName() {

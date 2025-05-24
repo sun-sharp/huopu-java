@@ -11,11 +11,8 @@ import lombok.Data;
  **/
 @Data
 public class WeChatProp {
-//    public final static String APP_ID = "wx25061ad3502eb15d";
-//    public final static String SECRET = "85808c3704492df895bc702ff6399364";
-
-    public final static String APP_ID = "wxf229a8ab8f892027";
-    public final static String SECRET = "7a113d3dbbc5f0221d9842fbc3d78449";
+    public final static String APP_ID = "wx25061ad3502eb15d";
+    public final static String SECRET = "85808c3704492df895bc702ff6399364";
 
     public final static String MCH_ID = "1615191079";
     public final static String MCH_KEY = "RK2L78yY9O8gZhoDVsAW1dNB1w1uxDcE";
