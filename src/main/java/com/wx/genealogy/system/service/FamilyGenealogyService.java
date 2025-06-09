@@ -101,4 +101,6 @@ public interface FamilyGenealogyService extends IService<FamilyGenealogy> {
     JsonResult getFamilyGenealogyTreeByFamilyId(Integer familyId, Integer parentId, Integer level);
 
     JsonResult updateResumeById(FamilyGenealogyIntroduceReqVo userIntroduceReqVo) throws Exception;
+
+    JsonResult countFamilyGenealogyDirectDescendants(Integer familyId, Integer uid);
 }

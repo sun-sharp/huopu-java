@@ -1395,7 +1395,7 @@ public class FamilyGenealogyServiceImpl extends ServiceImpl<FamilyGenealogyDao, 
         }
         queryWrapper.orderBy(true, false, "generation").orderByDesc("id");
         queryWrapper.eq("family_id", familyId);
-        List<FamilyGenealogy> familyList =  familyGenealogyDao.selectList(queryWrapper);
+        List<FamilyGenealogy> familyList = familyGenealogyDao.selectList(queryWrapper);
         //查询代差
         //获取这个家族全部人员
         QueryWrapper<FamilyGenealogy> wrapperG = new QueryWrapper<FamilyGenealogy>();
@@ -1506,7 +1506,8 @@ public class FamilyGenealogyServiceImpl extends ServiceImpl<FamilyGenealogyDao, 
     /**
      * 计算家族成员与当前登录人的距离：按两个人到重叠点的最短距离计算，在一条线的距离都是0
      * 先找重叠点，再分别计算两人到重叠点的距离
-     * @param me 当前登录人
+     *
+     * @param me    当前登录人
      * @param other 其他家族成员
      */
     private void calDistance(FamilyGenealogy me, FamilyGenealogy other, Map<Integer, FamilyGenealogy> map) {
@@ -2020,6 +2021,7 @@ public class FamilyGenealogyServiceImpl extends ServiceImpl<FamilyGenealogyDao, 
 
     /**
      * 递归设置女儿后代所有家族的颜色
+     *
      * @param children
      */
     public void setColor2(List<FamilyGenealogyTreeResVo> children) {
@@ -2092,7 +2094,7 @@ public class FamilyGenealogyServiceImpl extends ServiceImpl<FamilyGenealogyDao, 
                 userImgList.add(userImg);
             }
             familyGenealogyImgService.saveBatch(userImgList);
-        }else{
+        } else {
             long cnt = familyGenealogyImgService.count(Wrappers.lambdaQuery(FamilyGenealogyImg.class).eq(FamilyGenealogyImg::getFamilyGenealogyId, familyGenealogyUpdate.getId()));
             if (cnt > 0) {
                 familyGenealogyImgService.deleteByFamilyGenealogyId(familyGenealogyUpdate.getId());
@@ -2100,6 +2102,41 @@ public class FamilyGenealogyServiceImpl extends ServiceImpl<FamilyGenealogyDao, 
         }
 
         return ResponseUtil.ok("修改成功");
+    }
+
+    public List<FamilyGenealogy> forDirectDescendants(List<FamilyGenealogy> list) {
+        List<FamilyGenealogy> result = new ArrayList<>(list);
+        for (FamilyGenealogy family : list) {
+            QueryWrapper<FamilyGenealogy> wrapperG = new QueryWrapper<>();
+            wrapperG.eq("family_id", family.getFamilyId());
+            wrapperG.eq("parent_id", family.getUid());
+            List<FamilyGenealogy> child = this.familyGenealogyDao.selectList(wrapperG);
+            result.addAll(forDirectDescendants(child));
+        }
+        return result;
+    }
+
+    @Override
+    public JsonResult countFamilyGenealogyDirectDescendants(Integer familyId, Integer uid) {
+        QueryWrapper<FamilyGenealogy> wrapperG = new QueryWrapper<FamilyGenealogy>();
+        wrapperG.eq("family_id", familyId);
+        wrapperG.eq("uid", uid);
+        List<FamilyGenealogy> list = this.familyGenealogyDao.selectList(wrapperG);
+        if (list.isEmpty()) {
+            return ResponseUtil.fail("查询家族图谱失败！");
+        }
+        List<FamilyGenealogy> newlist = new ArrayList<>(forDirectDescendants(list));
+        newlist.remove(0);
+        HashMap<String, Object> map = new HashMap<>(8);
+        map.put("list", newlist);
+        map.put("total", newlist.size());
+        map.put("aliveCount", newlist.stream()
+                .filter(n -> n.getIsAlive() == 1)  // 条件：1 为 在世
+                .count());
+        map.put("deadCount", newlist.stream()
+                .filter(n -> n.getIsAlive() == 0)  // 条件：0 为 去世
+                .count());
+        return ResponseUtil.ok("查询成功", map);
     }
 
 }

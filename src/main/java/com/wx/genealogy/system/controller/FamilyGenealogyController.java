@@ -427,6 +427,30 @@ public class FamilyGenealogyController {
     }
 
     /**
+     * 统计当前人物的直系后代情况
+     *
+     * @param familyId 家族id
+     * @param uid uid
+     * @return
+     */
+    @GetMapping("/countFamilyGenealogyDirectDescendants")
+    @ApiOperation(value = "统计当前人物的直系后代情况")
+    @ApiImplicitParams(value = {
+            @ApiImplicitParam(name = "familyId", value = "家族id", dataType = "java.lang.Integer", paramType = "query", required = true),
+            @ApiImplicitParam(name = "uid", value = "uid", dataType = "java.lang.Integer", paramType = "query", required = true),
+    })
+    public JsonResult countFamilyGenealogyDirectDescendants(Integer familyId, Integer uid) {
+        if (ObjectUtil.isNull(familyId)) {
+            return ResponseUtil.fail("家族id不能为空");
+        }
+        if (ObjectUtil.isNull(uid)) {
+            return ResponseUtil.fail("uid不能为空");
+        }
+
+        return this.familyGenealogyService.countFamilyGenealogyDirectDescendants(familyId, uid);
+    }
+
+    /**
      * 管理员修改族谱图信息
      *
      * @param familyGenealogy
