@@ -20,6 +20,7 @@ import com.wx.genealogy.system.mapper.FamilyDownloadDao;
 import com.wx.genealogy.system.mapper.FamilyGenealogyDao;
 import com.wx.genealogy.system.mapper.FamilyUserDao;
 import com.wx.genealogy.system.mapper.UserDao;
+import com.wx.genealogy.system.mapper.RiceRecordDao;
 import com.wx.genealogy.system.service.*;
 import com.wx.genealogy.system.vo.req.*;
 import com.wx.genealogy.system.vo.res.FamilyGenealogyTreeResVo;
@@ -64,6 +65,9 @@ public class FamilyGenealogyServiceImpl extends ServiceImpl<FamilyGenealogyDao, 
 
     @Autowired
     private FamilyGenealogyDao familyGenealogyDao;
+
+    @Autowired
+    private RiceRecordDao riceRecordDao;
 
     @Autowired
     private FamilyGenealogyReceiveService familyGenealogyReceiveService;
@@ -1754,21 +1758,33 @@ public class FamilyGenealogyServiceImpl extends ServiceImpl<FamilyGenealogyDao, 
     @Override
     public JsonResult viewFamilyTreePay(Integer familyId, Integer userId) {
 
+        // 米数数量
+        int riceNum = 50;
         //看看用户米够不够
         User user = userDao.selectById(userId);
         if (user == null) {
             return ResponseUtil.fail("查看用户信息失败");
         }
-        if (user.getRice() < 50) {
+        if (user.getRice() < riceNum) {
             return ResponseUtil.fail("米不足");
         }
         //消耗米
         User userUpdate = new User();
         userUpdate.setId(user.getId());
-        userUpdate.setRice(50);
+        userUpdate.setRice(riceNum);
         int result = userDao.setDec(userUpdate);
         if (result == 0) {
             throw new ServiceException("扣除米失败");
+        }
+        // 添加米支出记录
+        RiceRecord riceRecord = new RiceRecord();
+        riceRecord.setUserId(user.getId());
+        riceRecord.setRice(-riceNum);
+        riceRecord.setContent("查看树谱支出");
+        riceRecord.setCreateTime(DateUtils.getDateTime());
+        result=riceRecordDao.insert(riceRecord);
+        if(result==0){
+            throw new ServiceException("添加米支出记录");
         }
         return ResponseUtil.ok("查看家族树");
     }
